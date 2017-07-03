@@ -1,0 +1,35 @@
+.PHONY: build run test create-deploy redeploy
+.PHONY: push pull
+
+SEMAPHORE_EXECUTABLE_UUID?=""
+GIT_HASH=$(shell git log --format=format:'%h' -1)
+TAG?=$(GIT_HASH)-$(SEMAPHORE_EXECUTABLE_UUID)
+TAG_SHORT=$(GIT_HASH)
+REPO=renderedtext/<%= prj %>
+IMAGE=$(REPO):$(TAG)
+IMAGE_SHORT=$(REPO):$(TAG_SHORT)
+IMAGE_LATEST=$(REPO):latest
+
+build:
+	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
+	docker tag $(IMAGE) $(IMAGE_SHORT)
+	docker tag $(IMAGE) $(IMAGE_LATEST)
+
+run:
+	docker run -p 4000:4000 -it $(IMAGE)
+
+test: build
+	mix usvc.dc_gen
+	docker-compose up
+
+push:
+	docker push $(IMAGE)
+	docker push $(IMAGE_SHORT)
+	docker push $(IMAGE_LATEST)
+
+pull:
+	docker pull $(IMAGE)
+
+create-deploy:
+	kubectl create -f deploy.yml
+	kubectl create -f svc.yml

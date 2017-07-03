@@ -1,4 +1,4 @@
-defmodule Mix.Tasks.New.Uservice do
+defmodule Mix.Tasks.Usvc.New do
   use Mix.Task
 
   alias NewUservice.Colors
@@ -62,7 +62,8 @@ defmodule Mix.Tasks.New.Uservice do
     [
       prj: prj,
       prj_atom: prj |> eex_atom(),
-      prj_module_name: Macro.camelize(prj)
+      prj_module_name: Macro.camelize(prj),
+      git_hash_placeholder: "<%= git_hash %>"
     ]
   end
 
@@ -71,7 +72,7 @@ defmodule Mix.Tasks.New.Uservice do
   def output_file_paths(template_file_paths, prj, svc_type) do
     template_file_paths
     |> Enum.map(&String.replace(&1, Templates.templates_dir(svc_type), prj))
-    |> Enum.map(&String.replace(&1, ".eex", ""))
+    |> Enum.map(&String.replace_suffix(&1, ".eex", ""))
     |> Enum.map(&String.replace(&1, "prj", prj))
   end
 

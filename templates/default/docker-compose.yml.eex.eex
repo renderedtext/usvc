@@ -1,0 +1,6 @@
+version: '3.2'
+services:
+  <%= prj %>:
+    image: renderedtext/<%= prj %>:<%= git_hash_placeholder %>
+    ports:
+    - "4000:4000"
