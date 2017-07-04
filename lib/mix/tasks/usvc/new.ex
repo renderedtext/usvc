@@ -1,7 +1,7 @@
 defmodule Mix.Tasks.Usvc.New do
   use Mix.Task
 
-  alias NewUservice.Colors
+  alias NewUservice.Color
   alias NewUservice.Templates
 
   @shortdoc "Create new, working micro service"
@@ -9,13 +9,13 @@ defmodule Mix.Tasks.Usvc.New do
   def run(args) do
     with  {:ok, prj} <- get_prj(args),
           {:ok, svc_type} <- get_svc_type(args),
-          Mix.shell.info("\nCreating Elixir project #{Colors.green(prj)}."),
+          Mix.shell.info("\nCreating Elixir project #{Color.green(prj)}."),
           {_, 0} <- create_ex_prj(prj),
           :ok <- render_templates(prj, svc_type),
           Mix.shell.info("\nSetting-up git."),
           {:ok, _} <- git_setup(prj)
     do
-      Mix.shell.info "\nCreated micro-service #{Colors.green(prj)} based on #{Colors.green(svc_type)} templates.\n"
+      Mix.shell.info "\nCreated micro-service #{Color.green(prj)} based on #{Color.green(svc_type)} templates.\n"
     else error ->
       error |> inspect() |> IO.puts()
     end

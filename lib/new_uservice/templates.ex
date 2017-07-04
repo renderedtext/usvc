@@ -1,7 +1,7 @@
 defmodule NewUservice.Templates do
   require EEx
 
-  alias NewUservice.Colors
+  alias NewUservice.Color
   alias NewUservice.Directory
 
   @templates_dir "templates"
@@ -23,7 +23,7 @@ defmodule NewUservice.Templates do
   end
 
   defp render_one_template(template, output, template_variables) do
-    Mix.shell.info " - #{Colors.green(template)}"
+    Mix.shell.info " - #{Color.green(template)}"
 
     Path.dirname(output) |> File.mkdir_p!
 
