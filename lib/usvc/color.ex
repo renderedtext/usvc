@@ -1,4 +1,4 @@
-defmodule NewUservice.Color do
+defmodule Usvc.Color do
 
   def green(text) do
     "#{IO.ANSI.green}#{text}#{IO.ANSI.reset}"

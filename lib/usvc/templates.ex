@@ -1,8 +1,8 @@
-defmodule NewUservice.Templates do
+defmodule Usvc.Templates do
   require EEx
 
-  alias NewUservice.Color
-  alias NewUservice.Directory
+  alias Usvc.Color
+  alias Usvc.Directory
 
   @templates_dir "templates"
 

@@ -1,8 +1,8 @@
 defmodule Mix.Tasks.Usvc.New do
   use Mix.Task
 
-  alias NewUservice.Color
-  alias NewUservice.Templates
+  alias Usvc.Color
+  alias Usvc.Templates
 
   @shortdoc "Create new, working micro service"
 

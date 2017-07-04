@@ -1,5 +1,5 @@
-defmodule NewUservice.Directory do
-  alias NewUservice.Color
+defmodule Usvc.Directory do
+  alias Usvc.Color
 
   # List files in a directory
   def ls(path) do

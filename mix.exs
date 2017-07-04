@@ -1,9 +1,9 @@
-defmodule NewUservice.Mixfile do
+defmodule Usvc.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :new_uservice,
-     version: "0.3.3",
+    [app: :usvc,
+     version: "0.4.0",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
