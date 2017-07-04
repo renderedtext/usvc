@@ -13,7 +13,7 @@ defmodule <%= prj_module_name %>.Router do
   plug :dispatch
 
   get "/" do
-    send_resp(conn, 200, "Hello uservice!")
+    send_resp(conn, 200, "Hello micro-service!")
   end
 
   match _ do
