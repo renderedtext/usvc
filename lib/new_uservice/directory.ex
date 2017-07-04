@@ -1,4 +1,5 @@
 defmodule NewUservice.Directory do
+  alias NewUservice.Colors
 
   # List files in a directory
   def ls(path) do
@@ -13,7 +14,7 @@ defmodule NewUservice.Directory do
       File.regular?(path) ->
         [path]
       true ->
-        raise "Path does not exists"
+        raise "Path #{Colors.red(path)} does not exists!"
     end
   end
 

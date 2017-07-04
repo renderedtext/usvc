@@ -7,23 +7,49 @@ defmodule Mix.Tasks.Usvc.New do
   @shortdoc "Create new, working micro service"
 
   def run(args) do
-    prj = Enum.at(args, 0)
-      svc_type = :default
-
-      Mix.shell.info "\nCreating Elixir project #{Colors.green(prj)}."
-      create_ex_prj(prj)
-
-      _output_paths = render_templates(prj, svc_type)
-
-      Mix.shell.info "\nSetting-up git."
-      git_setup(prj)
+    with  {:ok, prj} <- get_prj(args),
+          {:ok, svc_type} <- get_svc_type(args),
+          Mix.shell.info("\nCreating Elixir project #{Colors.green(prj)}."),
+          {_, 0} <- create_ex_prj(prj),
+          :ok <- render_templates(prj, svc_type),
+          Mix.shell.info("\nSetting-up git."),
+          {:ok, _} <- git_setup(prj)
+    do
       Mix.shell.info "\nCreated micro-service #{Colors.green(prj)} based on #{Colors.green(svc_type)} templates.\n"
+    else error ->
+      error |> inspect() |> IO.puts()
+    end
   end
 
-  def create_ex_prj(_prj=nil), do: throw "Project name not specified!"
+  def get_prj(args) do
+    Enum.at(args, 0)
+    |> case do
+      nil -> {:error, "Project name not specified!"}
+      name -> {:ok, name}
+    end
+  end
+
+  def get_svc_type(args) do
+    args
+    |> Enum.find_index(fn it -> it == "--type" end)
+    |> get_svc_type_(args)
+  end
+
+  def get_svc_type_(nil, _args), do: {:ok, :default}
+  def get_svc_type_(index, args) do
+    Enum.at(args, index+1)
+    |> case do
+      nil -> {:error, "Missing service type!"}
+      type -> {:ok, type |> String.to_atom()}
+    end
+  end
+
   def create_ex_prj(prj) do
-    File.dir?(prj) |> if do throw "Directory #{prj} already exists" end
-    System.cmd("mix", ["new", prj, "--sup"])
+    if File.dir?(prj) do
+      {"Directory #{prj} already exists", 1}
+    else
+      System.cmd("mix", ["new", prj, "--sup"])
+    end
   end
 
   def git_setup(prj) do
@@ -31,8 +57,7 @@ defmodule Mix.Tasks.Usvc.New do
           ({_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git add ."])),
           {_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git commit -m \"initial\""])
     do
-    else error ->
-      throw "#{inspect error}"
+      {:ok, ""}
     end
   end
 
@@ -41,8 +66,6 @@ defmodule Mix.Tasks.Usvc.New do
     output_paths   = output_file_paths(template_paths, prj, svc_type)
     template_variables = template_variables(prj)
     Templates.render(template_paths, output_paths, template_variables)
-
-    output_paths
   end
 
   defp template_variables(prj) do
