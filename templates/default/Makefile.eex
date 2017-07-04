@@ -15,7 +15,7 @@ build:
 	docker tag $(IMAGE) $(IMAGE_SHORT)
 	docker tag $(IMAGE) $(IMAGE_LATEST)
 
-run:
+run: build
 	docker run -p 4000:4000 -it $(IMAGE)
 
 test: build
@@ -29,6 +29,7 @@ push:
 
 pull:
 	docker pull $(IMAGE)
+	docker pull $(IMAGE_LATEST)
 
 create-deploy:
 	kubectl create -f deploy.yml

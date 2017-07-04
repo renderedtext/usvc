@@ -16,7 +16,7 @@ defmodule <%= prj_module_name %>.Mixfile do
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
     [extra_applications: [:logger],
-     mod: {Ppp.Application, []}]
+     mod: {<%= prj_module_name %>.Application, []}]
   end
 
   # Dependencies can be Hex packages:

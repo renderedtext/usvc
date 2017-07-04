@@ -12,5 +12,5 @@ COPY lib lib/
 COPY test test/
 RUN mix compile
 
-CMD elixir --sname pl-proto -S mix run --no-halt
+CMD elixir --sname <%= prj %> -S mix run --no-halt
 
