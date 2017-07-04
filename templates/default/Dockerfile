@@ -1,8 +1,14 @@
 FROM elixir:1.4.4
 
-COPY . /home
+WORKDIR /home/prj
+ENV HOME=/home
+ENV TERM=xterm
 
-WORKDIR /home
+COPY mix* ./
+COPY config/ config/
+COPY lib lib/
+COPY test test/
+
 
 RUN mix do local.hex --force, local.rebar --force, deps.get, compile
 
