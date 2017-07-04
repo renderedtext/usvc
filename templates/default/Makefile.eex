@@ -14,11 +14,8 @@ build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_SHORT)
 	docker tag $(IMAGE) $(IMAGE_LATEST)
-	$(eval cid=$(shell docker create $(IMAGE)))
-	echo $(cid)
-	docker cp $(cid):/home/prj/mix.lock ./mix.lock
-	docker rm -v $(cid)
-
+	$(eval size=$(shell wc -c <mix.lock ))
+	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock; fi
 
 run: build
 	docker run -p 4000:4000 -it $(IMAGE)
@@ -34,11 +31,21 @@ pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
 
-create-deploy: build push config-gen
+create-deploy: abort-on-uncommited-changes build push config-gen
 	kubectl create -f deploy.yml
 
-redeploy: build push config-gen
+redeploy: abort-on-uncommited-changes build push config-gen
 	kubectl apply -f deploy.yml
 
 config-gen:
 	mix usvc.cfg_gen $(TAG)
+
+abort-on-uncommited-changes:
+	git diff-index --quiet HEAD --
+
+copy-mix.lock:
+	$(eval cid=$(shell docker create $(IMAGE)))
+	echo $(cid)
+	docker cp $(cid):/home/prj/mix.lock ./mix.lock
+	docker rm -v $(cid)
+
