@@ -28,17 +28,16 @@ test: build config-gen
 
 push:
 	docker push $(IMAGE)
-	docker push $(IMAGE_SHORT)
 	docker push $(IMAGE_LATEST)
 
 pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
 
-create-deploy: config-gen
+create-deploy: build push config-gen
 	kubectl create -f deploy.yml
 
-redeploy: config-gen
+redeploy: build push config-gen
 	kubectl apply -f deploy.yml
 
 config-gen:
