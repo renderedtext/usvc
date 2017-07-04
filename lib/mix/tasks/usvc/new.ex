@@ -4,55 +4,42 @@ defmodule Mix.Tasks.Usvc.New do
   alias NewUservice.Colors
   alias NewUservice.Templates
 
-  @shortdoc "Create new minimal micro service"
-  # @credentials_url "s3://renderedtext-secrets/thrifter/env"
-
-  # def run(a) do
-  #   IO.puts "args: #{inspect a}"
-  #   prj = Enum.at(a, 0)
-  #   IO.puts("Creating projects: #{prj}")
-  #   System.cmd("mix", ["new", prj, "--sup"])
-  #   IO.inspect System.cmd("/bin/bash", ["-c", "cd #{prj}; git init"])
-  # end
+  @shortdoc "Create new, working micro service"
 
   def run(args) do
     prj = Enum.at(args, 0)
-    svc_type = :default
+      svc_type = :default
 
-    Mix.shell.info ""
-    Mix.shell.info "Generating uservice #{prj}, type: #{svc_type}"
-    Mix.shell.info "------------------------"
+      Mix.shell.info "\nCreating Elixir project #{Colors.green(prj)}."
+      create_ex_prj(prj)
 
-    create_ex_prj(prj)
+      _output_paths = render_templates(prj, svc_type)
 
-    # Thrift.generate(output: thrift_output_dir, language: "erl")
-    _output_paths = generate_elixir_files(prj, svc_type)
-
-    git_setup(prj)
-    Mix.shell.info "\nElixir client generated in #{Colors.green(prj)}\n"
-
-    # output_paths ++ [thrift_output_dir]
-    # |> GitRepo.create_package(package_name, client_dir, version)
+      Mix.shell.info "\nSetting-up git."
+      git_setup(prj)
+      Mix.shell.info "\nCreated micro-service #{Colors.green(prj)} based on #{Colors.green(svc_type)} templates.\n"
   end
 
+  def create_ex_prj(_prj=nil), do: throw "Project name not specified!"
   def create_ex_prj(prj) do
     File.dir?(prj) |> if do throw "Directory #{prj} already exists" end
     System.cmd("mix", ["new", prj, "--sup"])
   end
 
   def git_setup(prj) do
-    IO.inspect System.cmd("/bin/bash", ["-c", "cd #{prj}; git init"])
-    IO.inspect System.cmd("/bin/bash", ["-c", "cd #{prj}; git add ."])
-    IO.inspect System.cmd("/bin/bash", ["-c", "cd #{prj}; git commit -m \"initial\""])
+    with  {_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git init"]),
+          ({_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git add ."])),
+          {_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git commit -m \"initial\""])
+    do
+    else error ->
+      throw "#{inspect error}"
+    end
   end
 
-  defp generate_elixir_files(prj, svc_type) do
+  defp render_templates(prj, svc_type) do
     template_paths = Templates.template_files_for(svc_type)
-    |> IO.inspect(label: "template_paths")
     output_paths   = output_file_paths(template_paths, prj, svc_type)
-    |> IO.inspect(label: "output_paths")
     template_variables = template_variables(prj)
-    |> IO.inspect(label: "template_variables")
     Templates.render(template_paths, output_paths, template_variables)
 
     output_paths

@@ -14,7 +14,7 @@ defmodule NewUservice.Templates do
     [@templates_dir, type |> Atom.to_string] |> Path.join
 
   def render(templates_paths, output_paths, template_variables) do
-    Mix.shell.info "\nRendering templates:\n"
+    Mix.shell.info "\nRendering templates:"
 
     Enum.zip(templates_paths, output_paths)
     |> Enum.each(fn {template, output} ->
@@ -27,9 +27,9 @@ defmodule NewUservice.Templates do
 
     Path.dirname(output) |> File.mkdir_p!
 
-    rendered = EEx.eval_file(template, template_variables)
-    |> IO.inspect(label: "rendered")
-
-    File.write!(output, rendered)
+    EEx.eval_file(template, template_variables)
+    |> write!(output)
   end
+
+  defp write!(rendered, output), do: File.write!(output, rendered)
 end
