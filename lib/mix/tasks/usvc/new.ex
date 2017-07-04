@@ -73,7 +73,7 @@ defmodule Mix.Tasks.Usvc.New do
       prj: prj,
       prj_atom: prj |> eex_atom(),
       prj_module_name: Macro.camelize(prj),
-      git_hash_placeholder: "<%= git_hash %>"
+      image_tag_placeholder: "<%= image_tag %>"
     ]
   end
 

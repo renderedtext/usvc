@@ -1,29 +1,26 @@
-defmodule Mix.Tasks.Usvc.DcGen do
+defmodule Mix.Tasks.Usvc.CfgGen do
   use Mix.Task
 
-  @shortdoc "Generate docker-compose.yml"
-  @docker_compose_template "docker-compose.yml.eex"
+  alias Usvc.Templates
+
+  @shortdoc "Generate configs dependent on git hash"
+  @templates ["docker-compose.yml.eex", "deploy.yml.eex"]
   @git_hash_cmd "git log --format=format:'%h' -1"
 
   def run(args) do
     with  {git_hash, 0} <- System.cmd("/bin/bash", ["-c", @git_hash_cmd]),
-          git_hash = args |> Enum.at(0, git_hash)
+          tag = args |> Enum.at(0, git_hash)
     do
-      run_(git_hash)
+      run_(tag)
     else error ->
       raise "git error: #{error}"
     end
   end
 
-  defp run_(git_hash) do
-    Mix.shell.info "Generating docker-compose.yml with tag '#{git_hash}'"
-
-    EEx.eval_file(@docker_compose_template, [git_hash: git_hash])
-    |> write_docker_compose()
+  defp run_(tag) do
+    output_paths = Enum.map(@templates, &String.replace_suffix(&1, ".eex", ""))
+    template_variables = [image_tag: tag]
+    Templates.render(@templates, output_paths, template_variables)
   end
 
-  defp write_docker_compose(rendered) do
-    String.replace_suffix(@docker_compose_template, ".eex", "")
-    |> File.write!(rendered)
-  end
 end

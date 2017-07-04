@@ -23,8 +23,7 @@ build:
 run: build
 	docker run -p 4000:4000 -it $(IMAGE)
 
-test: build
-	mix usvc.dc_gen
+test: build config-gen
 	docker-compose up
 
 push:
@@ -36,6 +35,11 @@ pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
 
-create-deploy:
+create-deploy: config-gen
 	kubectl create -f deploy.yml
-	kubectl create -f svc.yml
+
+redeploy: config-gen
+	kubectl apply -f deploy.yml
+
+config-gen:
+	mix usvc.cfg_gen $(TAG)
