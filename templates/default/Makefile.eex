@@ -14,6 +14,11 @@ build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_SHORT)
 	docker tag $(IMAGE) $(IMAGE_LATEST)
+	$(eval cid=$(shell docker create $(IMAGE)))
+	echo $(cid)
+	docker cp $(cid):/home/prj/mix.lock ./mix.lock
+	docker rm -v $(cid)
+
 
 run: build
 	docker run -p 4000:4000 -it $(IMAGE)
