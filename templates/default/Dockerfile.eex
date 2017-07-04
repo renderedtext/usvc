@@ -3,14 +3,14 @@ FROM elixir:1.4.4
 WORKDIR /home/prj
 ENV HOME=/home
 ENV TERM=xterm
+ENV MIX_ENV=prod
 
 COPY mix* ./
 COPY config/ config/
+RUN mix do local.hex --force, local.rebar --force, deps.get, compile
 COPY lib lib/
 COPY test test/
-
-
-RUN mix do local.hex --force, local.rebar --force, deps.get, compile
+RUN mix compile
 
 CMD elixir --sname pl-proto -S mix run --no-halt
 
