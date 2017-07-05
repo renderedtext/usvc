@@ -1,7 +1,11 @@
-# Micro-service
+# Micro-service (usvc)
 Micro service skeleton can be created and deployed in 5 min.
 
 ## Install locally
+Most of the logic is 'mix task'.
+To make the task available in all directories for current user
+download the repo and type:
+
 ```
 MIX_ENV=prod mix compile
 MIX_ENV=prod mix archive.build
@@ -45,7 +49,7 @@ make redeploy
 ```
 
 This command deploys to `default` k8s cluster.
-Before deploy itself it pushes docker image to DockerHub.
+Before deploy, it pushes docker image to DockerHub.
 
 Note: By default k8s uses `dockerhub-secrets` secret to pull image from DockerHub.
 `dockerhub-secrets` contains `rtrobot` DockerHub user's credentials.
@@ -66,5 +70,4 @@ There are couple `make` targets:
 Build target creates docker image called `renderedtext/<svc_name>`
 with 3 tags:
 - `latest`
-- `<git_hash>`
 - `<git_hash>-<SEMAPHORE_EXECUTABLE_UUID>`
