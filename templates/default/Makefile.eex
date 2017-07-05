@@ -1,5 +1,5 @@
 .PHONY: build run test create-deploy redeploy
-.PHONY: push pull
+.PHONY: push pull config-gen abort-on-uncommited-changes copy-mix.lock
 
 SEMAPHORE_EXECUTABLE_UUID?=""
 GIT_HASH=$(shell git log --format=format:'%h' -1)
@@ -23,6 +23,13 @@ run: build
 test: build config-gen
 	docker-compose up
 
+create-deploy: abort-on-uncommited-changes build push config-gen
+	kubectl create -f deploy.yml
+
+redeploy: abort-on-uncommited-changes build push config-gen
+	kubectl apply -f deploy.yml
+
+
 push:
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
@@ -30,12 +37,6 @@ push:
 pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
-
-create-deploy: abort-on-uncommited-changes build push config-gen
-	kubectl create -f deploy.yml
-
-redeploy: abort-on-uncommited-changes build push config-gen
-	kubectl apply -f deploy.yml
 
 config-gen:
 	mix usvc.cfg_gen $(TAG)
