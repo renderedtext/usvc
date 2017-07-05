@@ -1,4 +1,4 @@
-.PHONY: build run test create-deploy redeploy
+.PHONY: build run test create-deploy redeploy k8s-shell
 .PHONY: push pull config-gen abort-on-uncommited-changes copy-mix.lock
 
 SEMAPHORE_EXECUTABLE_UUID?=""
@@ -22,9 +22,14 @@ test: build config-gen
 
 create-deploy: abort-on-uncommited-changes build push config-gen
 	kubectl create -f deploy.yml
+	kubectl get svc/<%= prj %>
 
 redeploy: abort-on-uncommited-changes build push config-gen
 	kubectl apply -f deploy.yml
+	kubectl get svc/<%= prj %>
+
+k8s-shell:
+	kubectl run <%= prj %>-shell --rm -it --image $(IMAGE_LATEST) -- /bin/bash
 
 
 push:

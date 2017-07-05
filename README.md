@@ -12,6 +12,8 @@ MIX_ENV=prod mix archive.build
 MIX_ENV=prod mix archive.install
 ```
 
+This adds family of `usvc` mix tasks.
+
 ## Usage
 
 #### Create new micro-service:
