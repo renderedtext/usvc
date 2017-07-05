@@ -44,6 +44,14 @@ To redeploy:
 make redeploy
 ```
 
+This command deploys to `default` k8s cluster.
+Before deploy itself it pushes docker image to DockerHub.
+
+Note: By default k8s uses `dockerhub-secrets` secret to pull image from DockerHub.
+`dockerhub-secrets` contains `rtrobot` DockerHub user's credentials.
+To grant `rtrobot` permission to pull image
+you need to give `read` permissions on your new service image
+to DockerHub team `deployers`.
 
 ### Make targets
 There are couple `make` targets:

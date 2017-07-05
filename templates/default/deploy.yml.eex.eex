@@ -30,5 +30,5 @@ spec:
         ports:
         - containerPort: 4000
       imagePullSecrets:
-      - name: predragrakic-secret
+      - name: dockerhub-secrets
 
