@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: <%= prj %>
 spec:
-  type: LoadBalancer
+  type: NodePort
+#  type: LoadBalancer
   selector:
     app: <%= prj %>
   ports:
