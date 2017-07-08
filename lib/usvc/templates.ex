@@ -11,7 +11,8 @@ defmodule Usvc.Templates do
   end
 
   def templates_dir(type), do:
-    [@templates_dir, type |> Atom.to_string] |> Path.join
+    [:code.priv_dir(:usvc), @templates_dir, type |> Atom.to_string]
+    |> Path.join
 
   def render(templates_paths, output_paths, template_variables) do
     Mix.shell.info "\nRendering templates:"
