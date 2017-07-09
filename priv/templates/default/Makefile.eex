@@ -29,7 +29,8 @@ redeploy: abort-on-uncommited-changes push config-gen
 	kubectl get svc/<%= prj_dash %>
 
 k8s-shell:
-	kubectl run <%= prj_dash %>-shell --rm -it --image $(IMAGE_LATEST) -- /bin/bash
+	$(eval pod_name=$(shell kubectl get po -l app=cluster-portal -o jsonpath={.items[*].metadata.name}))
+	kubectl exec -it $(pod_name) -- /bin/bash
 
 
 push: build
