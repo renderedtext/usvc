@@ -68,8 +68,9 @@ to DockerHub team `deployers`.
 - `create-deploy` - create initial deploy `kubectl create -f deploy.yml` to staging cluster only (for now)
 - `redeploy` - `kubectl apply -f deploy.yml` to staging cluster only (for now)
 - k8s-shell - Start bash shell in new container in k8s cluster.
+
 Build target creates docker image called `renderedtext/<svc_name>`
-with 3 tags:
+with these tags:
 - `latest`
 - `<git_hash>-<SEMAPHORE_EXECUTABLE_UUID>`
 
