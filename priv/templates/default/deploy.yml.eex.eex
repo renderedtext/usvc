@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: <%= prj %>
+  name: <%= prj_dash %>
 spec:
   type: NodePort
 #  type: LoadBalancer
   selector:
-    app: <%= prj %>
+    app: <%= prj_dash %>
   ports:
     - protocol: TCP
       port: 4000
@@ -16,20 +16,19 @@ spec:
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: <%= prj %>
+  name: <%= prj_dash %>
 spec:
   replicas: 1
   template:
     metadata:
-      name: <%= prj %>-pod
+      name: <%= prj_dash %>-pod
       labels:
-        app: <%= prj %>
+        app: <%= prj_dash %>
     spec:
       containers:
-      - name: <%= prj %>
+      - name: <%= prj_dash %>
         image: renderedtext/<%= prj %>:<%= image_tag_placeholder %>
         ports:
         - containerPort: 4000
       imagePullSecrets:
       - name: dockerhub-secrets
-

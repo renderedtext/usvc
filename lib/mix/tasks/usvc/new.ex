@@ -25,7 +25,7 @@ defmodule Mix.Tasks.Usvc.New do
     Enum.at(args, 0)
     |> case do
       nil -> {:error, "Project name not specified!"}
-      name -> {:ok, name}
+      name -> {:ok, name |> dash2underscore()}
     end
   end
 
@@ -70,7 +70,8 @@ defmodule Mix.Tasks.Usvc.New do
 
   defp template_variables(prj) do
     [
-      prj: prj,
+      prj: prj |> dash2underscore(),
+      prj_dash: prj |> underscore2dash(),
       prj_atom: prj |> eex_atom(),
       prj_module_name: Macro.camelize(prj),
       image_tag_placeholder: "<%= image_tag %>"
@@ -86,5 +87,6 @@ defmodule Mix.Tasks.Usvc.New do
     |> Enum.map(&String.replace(&1, "prj", prj))
   end
 
-  # defp package_name do (client_name |> String.replace("_", "-")) end
+  defp underscore2dash(str) do str |> String.replace("_", "-") end
+  defp dash2underscore(str) do str |> String.replace("-", "_") end
 end

@@ -20,19 +20,19 @@ run: build
 test: build config-gen
 	docker-compose up
 
-create-deploy: abort-on-uncommited-changes build push config-gen
+create-deploy: abort-on-uncommited-changes push config-gen
 	kubectl create -f deploy.yml
-	kubectl get svc/<%= prj %>
+	kubectl get svc/<%= prj_dash %>
 
-redeploy: abort-on-uncommited-changes build push config-gen
+redeploy: abort-on-uncommited-changes push config-gen
 	kubectl apply -f deploy.yml
-	kubectl get svc/<%= prj %>
+	kubectl get svc/<%= prj_dash %>
 
 k8s-shell:
-	kubectl run <%= prj %>-shell --rm -it --image $(IMAGE_LATEST) -- /bin/bash
+	kubectl run <%= prj_dash %>-shell --rm -it --image $(IMAGE_LATEST) -- /bin/bash
 
 
-push:
+push: build
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
 
