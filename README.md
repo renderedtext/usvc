@@ -60,7 +60,6 @@ you need to give `read` permissions on your new service image
 to DockerHub team `deployers`.
 
 ### Make targets
-There are couple `make` targets:
 - `build` [default] - build docker image
 - `run` - `docker run ...` with container port 4000 exposed on host port 4000
 - `test` - `docker-compose up`
@@ -68,7 +67,7 @@ There are couple `make` targets:
 - `pull` - `docker pull`
 - `create-deploy` - create initial deploy `kubectl create -f deploy.yml` to staging cluster only (for now)
 - `redeploy` - `kubectl apply -f deploy.yml` to staging cluster only (for now)
-
+- k8s-shell - Start bash shell in new container in k8s cluster.
 Build target creates docker image called `renderedtext/<svc_name>`
 with 3 tags:
 - `latest`
