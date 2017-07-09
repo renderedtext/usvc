@@ -12,7 +12,7 @@ build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_LATEST)
 	$(eval size=$(shell wc -c <mix.lock ))
-	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock; fi
+	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock build; fi
 
 run: build
 	docker run -p 4000:4000 -it $(IMAGE)
