@@ -30,5 +30,13 @@ spec:
         image: renderedtext/<%= prj %>:<%= image_tag_placeholder %>
         ports:
         - containerPort: 4000
+        livenessProbe:
+          httpGet:
+            path: /health_check/ping
+            port: 4000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
       imagePullSecrets:
       - name: dockerhub-secrets
