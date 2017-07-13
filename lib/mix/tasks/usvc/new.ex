@@ -84,7 +84,7 @@ defmodule Mix.Tasks.Usvc.New do
     template_file_paths
     |> Enum.map(&String.replace(&1, Templates.templates_dir(svc_type), prj))
     |> Enum.map(&String.replace_suffix(&1, ".eex", ""))
-    |> Enum.map(&String.replace(&1, "prj", prj))
+    |> Enum.map(&String.replace(&1, "__PROJECT--NAME__", prj))
   end
 
   defp underscore2dash(str) do str |> String.replace("_", "-") end
