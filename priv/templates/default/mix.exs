@@ -34,6 +34,7 @@ defmodule <%= prj_module_name %>.Mixfile do
       {:plug, "~> 1.3"},
       {:poison, "~> 3.1"},
       {:httpoison, "~> 0.11"},
+      {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
     ]
   end
 end
