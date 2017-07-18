@@ -47,7 +47,7 @@ k8s-shell:
 	kubectl exec -it $(pod_name) -- /bin/bash
 
 watch:
-	docker run $(INTERACTIVE_SESSION)  mix test.watch
+	docker run $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
 
 push: build
 	docker push $(IMAGE)
