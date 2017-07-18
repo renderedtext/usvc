@@ -48,6 +48,9 @@ k8s-shell:
 watch:
 	docker run $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
 
+lint:
+	docker run $(INTERACTIVE_SESSION)  mix do credo
+
 push: build
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
