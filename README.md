@@ -73,7 +73,7 @@ To automaticaly recompile and run tests on each file change
 make watch
 ```
 
-### Build targets
+### Docker image tags
 Build target creates docker image called `renderedtext/<svc_name>`
 with these tags:
 - `latest`
