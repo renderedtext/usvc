@@ -1,4 +1,4 @@
-.PHONY: build run test create-deploy redeploy k8s-shell
+.PHONY: build run test create-deploy redeploy k8s-shell console watch
 .PHONY: push pull config-gen abort-on-uncommited-changes copy-mix.lock
 
 SEMAPHORE_EXECUTABLE_UUID?=""
@@ -17,6 +17,10 @@ INTERACTIVE_SESSION=\
           --workdir="/home/developer/prj" \
           -p 4000:4000 \
           -it renderedtext/elixir:latest
+
+
+console:
+	docker run $(INTERACTIVE_SESSION)  /bin/bash
 
 build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
@@ -41,9 +45,6 @@ redeploy: abort-on-uncommited-changes push config-gen
 k8s-shell:
 	$(eval pod_name=$(shell kubectl get po -l app=cluster-portal -o jsonpath={.items[*].metadata.name}))
 	kubectl exec -it $(pod_name) -- /bin/bash
-
-console:
-	docker run $(INTERACTIVE_SESSION)  /bin/bash 
 
 watch:
 	docker run $(INTERACTIVE_SESSION)  mix test.watch
