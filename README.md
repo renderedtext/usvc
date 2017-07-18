@@ -30,9 +30,9 @@ Http server listens on port 4000.
 cd <svc_name>
 ```
 
-#### Buid docker image:
+#### Build docker image:
 ```
-make
+make build
 ```
 
 #### Run tests against service API:
@@ -59,16 +59,21 @@ To grant `rtrobot` permission to pull image
 you need to give `read` permissions on your new service image
 to DockerHub team `deployers`.
 
-### Make targets
-- `build` [default] - build docker image
-- `run` - `docker run ...` with container port 4000 exposed on host port 4000
-- `test` - `docker-compose up`
-- `push` - `docker push`
-- `pull` - `docker pull`
-- `create-deploy` - create initial deploy `kubectl create -f deploy.yml` to staging cluster only (for now)
-- `redeploy` - `kubectl apply -f deploy.yml` to staging cluster only (for now)
-- k8s-shell - Start bash shell in new container in k8s cluster.
+### Local development
 
+#### Console
+Starts interactive docker image with mounted project directories
+```
+make console
+```
+
+#### File watcher
+To automaticaly recompile and run tests on each file change
+```
+make watch
+```
+
+### Build targets
 Build target creates docker image called `renderedtext/<svc_name>`
 with these tags:
 - `latest`
