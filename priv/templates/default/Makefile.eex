@@ -15,12 +15,11 @@ INTERACTIVE_SESSION=\
           --user developer \
           --rm \
           --workdir="/home/developer/prj" \
-          -p 4000:4000 \
           -it renderedtext/elixir:latest
 
 
 console:
-	docker run $(INTERACTIVE_SESSION)  /bin/bash
+	docker run -p 4000:4000 $(INTERACTIVE_SESSION)  /bin/bash
 
 build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
