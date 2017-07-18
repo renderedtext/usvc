@@ -32,6 +32,18 @@ k8s-shell:
 	$(eval pod_name=$(shell kubectl get po -l app=cluster-portal -o jsonpath={.items[*].metadata.name}))
 	kubectl exec -it $(pod_name) -- /bin/bash
 
+console:
+	docker run \
+          -v $$PWD/home_dir:/home/developer \
+          -v $$PWD:/home/developer/prj \
+          -e HOME=/home/developer/ \
+          --user developer \
+          --rm \
+          --workdir="/home/developer/prj" \
+          -p 4000:4000 \
+          -it renderedtext/elixir:latest \
+          /bin/bash
+
 
 push: build
 	docker push $(IMAGE)
@@ -50,6 +62,5 @@ abort-on-uncommited-changes:
 copy-mix.lock:
 	$(eval cid=$(shell docker create $(IMAGE)))
 	echo $(cid)
-	docker cp $(cid):/home/prj/mix.lock ./mix.lock
+	docker cp $(cid):/home/developer/prj/mix.lock ./mix.lock
 	docker rm -v $(cid)
-
