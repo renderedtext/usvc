@@ -3,7 +3,7 @@ defmodule Usvc.Mixfile do
 
   def project do
     [app: :usvc,
-     version: "0.5.8",
+     version: "0.5.9",
      elixir: "~> 1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,

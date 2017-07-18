@@ -32,7 +32,7 @@ defmodule <%= prj_module_name %>.Mixfile do
     [
       {:cowboy, "~> 1.1.0"},
       {:plug, "~> 1.3"},
-      {:poison, "~> 3.1"},
+#      {:poison, "~> 3.1"},
       {:httpoison, "~> 0.11"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false},
       {:mix_test_watch, "~> 0.3", only: :dev, runtime: false},
