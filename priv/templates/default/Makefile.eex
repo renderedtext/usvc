@@ -8,6 +8,16 @@ REPO=renderedtext/<%= prj %>
 IMAGE=$(REPO):$(TAG)
 IMAGE_LATEST=$(REPO):latest
 
+INTERACTIVE_SESSION=\
+          -v $$PWD/home_dir:/home/developer \
+          -v $$PWD:/home/developer/prj \
+          -e HOME=/home/developer/ \
+          --user developer \
+          --rm \
+          --workdir="/home/developer/prj" \
+          -p 4000:4000 \
+          -it renderedtext/elixir:latest
+
 build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_LATEST)
@@ -33,17 +43,10 @@ k8s-shell:
 	kubectl exec -it $(pod_name) -- /bin/bash
 
 console:
-	docker run \
-          -v $$PWD/home_dir:/home/developer \
-          -v $$PWD:/home/developer/prj \
-          -e HOME=/home/developer/ \
-          --user developer \
-          --rm \
-          --workdir="/home/developer/prj" \
-          -p 4000:4000 \
-          -it renderedtext/elixir:latest \
-          /bin/bash
+	docker run $(INTERACTIVE_SESSION)  /bin/bash 
 
+watch:
+	docker run $(INTERACTIVE_SESSION)  mix test.watch
 
 push: build
 	docker push $(IMAGE)
