@@ -1,5 +1,5 @@
 .PHONY: image.build image.run image.test image.push image.pull
-.PHONY: create-deploy redeploy k8s-shell console watch lint
+.PHONY: create-deploy deploy k8s-shell console watch lint
 .PHONY: config-gen abort-on-uncommited-changes copy-mix.lock
 
 SEMAPHORE_EXECUTABLE_UUID?=""
@@ -38,7 +38,7 @@ create-deploy: abort-on-uncommited-changes push config-gen
 	kubectl create -f deploy.yml
 	kubectl get svc/<%= prj_dash %>
 
-redeploy: abort-on-uncommited-changes push config-gen
+deploy: abort-on-uncommited-changes push config-gen
 	kubectl apply -f deploy.yml
 	kubectl get svc/<%= prj_dash %>
 
