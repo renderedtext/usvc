@@ -34,11 +34,11 @@ image.run: image.build
 image.test: image.build config-gen
 	docker-compose up
 
-create-deploy: abort-on-uncommited-changes push config-gen
+create-deploy: abort-on-uncommited-changes image.push config-gen
 	kubectl create -f deploy.yml
 	kubectl get svc/<%= prj_dash %>
 
-deploy: abort-on-uncommited-changes push config-gen
+deploy: abort-on-uncommited-changes image.push config-gen
 	kubectl apply -f deploy.yml
 	kubectl get svc/<%= prj_dash %>
 
