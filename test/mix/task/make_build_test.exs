@@ -8,7 +8,7 @@ defmodule Mix.Tasks.Usvc.Make.Build.Test do
     File.rm_rf!(@prj)
     Mix.Tasks.Usvc.New.run([@prj])
     IO.puts("Compiling...")
-    System.cmd("make", ["build"], [cd: @prj])
+    {_, 0} = System.cmd("make", ["image.build"], [cd: @prj])
     :ok
   end
 

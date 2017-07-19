@@ -26,12 +26,12 @@ image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_LATEST)
 	$(eval size=$(shell wc -c <mix.lock ))
-	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock build; fi
+	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock image.build; fi
 
-image.run: build
+image.run: image.build
 	docker run -p 4000:4000 -it $(IMAGE)
 
-image.test: build config-gen
+image.test: image.build config-gen
 	docker-compose up
 
 create-deploy: abort-on-uncommited-changes push config-gen
@@ -52,7 +52,7 @@ watch:
 lint:
 	docker run $(INTERACTIVE_SESSION)  mix do credo
 
-image.push: build
+image.push: image.build
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
 
