@@ -1,5 +1,6 @@
-.PHONY: build run test create-deploy redeploy k8s-shell console watch
-.PHONY: push pull config-gen abort-on-uncommited-changes copy-mix.lock
+.PHONY: image.build image.run image.test image.push image.pull
+.PHONY: create-deploy redeploy k8s-shell console watch lint
+.PHONY: config-gen abort-on-uncommited-changes copy-mix.lock
 
 SEMAPHORE_EXECUTABLE_UUID?=""
 GIT_HASH=$(shell git log --format=format:'%h' -1)
@@ -21,16 +22,16 @@ INTERACTIVE_SESSION=\
 console:
 	docker run -p 4000:4000 $(INTERACTIVE_SESSION)  /bin/bash
 
-build:
+image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_LATEST)
 	$(eval size=$(shell wc -c <mix.lock ))
 	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock build; fi
 
-run: build
+image.run: build
 	docker run -p 4000:4000 -it $(IMAGE)
 
-test: build config-gen
+image.test: build config-gen
 	docker-compose up
 
 create-deploy: abort-on-uncommited-changes push config-gen
@@ -51,11 +52,11 @@ watch:
 lint:
 	docker run $(INTERACTIVE_SESSION)  mix do credo
 
-push: build
+image.push: build
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
 
-pull:
+image.pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
 
