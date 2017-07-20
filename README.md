@@ -15,7 +15,7 @@ MIX_ENV=prod mix archive.install
 This adds family of `usvc` mix tasks.
 
 ## Work-flow
-Starting with project creation all the way to deployment,
+Starting with project creation all the way to deployment.
 
 #### Create new micro-service project:
 ```
