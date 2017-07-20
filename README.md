@@ -7,9 +7,7 @@ To make the task available in all directories for current user
 download the repo and type:
 
 ```
-MIX_ENV=prod mix compile
-MIX_ENV=prod mix archive.build
-MIX_ENV=prod mix archive.install
+MIX_ENV=prod mix do compile, archive.build, archive.install
 ```
 
 This adds family of `usvc` mix tasks.
