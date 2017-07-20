@@ -57,7 +57,7 @@ with these tags:
 - `latest`
 - `<git_hash>-<SEMAPHORE_EXECUTABLE_UUID>`
 
-#### Execute service in the production container
+#### Execute production container localy
 - `make image.run` will:
     - build `renderedtext/<svc_name>` image and
     - run container created from it.
