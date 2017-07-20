@@ -14,32 +14,68 @@ MIX_ENV=prod mix archive.install
 
 This adds family of `usvc` mix tasks.
 
-## Usage
+## Work-flow
+Starting with project creation all the way to deployment,
 
-#### Create new micro-service:
+#### Create new micro-service project:
 ```
 mix usvc.new <svc_name>
 ```
 
 Command creates new Elixir project and populates it with
-'Hello' http server and some config files.
+'Hello' http server + some config and script files.
 Http server listens on port 4000.
 
-#### Change working directory to the project:
+#### Change working directory to the project directory:
 ```
 cd <svc_name>
 ```
 
-#### Build docker image:
+### Local development
+All development is conducted in Docker container based on `renderedtext/elixir` image.
+
+#### File watcher
+To automatically recompile and run tests on each file change
 ```
-make build
+make watch
 ```
 
-#### Run tests against service API:
-- run `make test` or `make run` and
-- send requests to port 4000 (e.g. `curl localhost:4000/`)
+#### Console
+Starts interactive docker image with mounted project directories
+```
+make console
+```
 
-#### Deploy
+### Docker image operations
+
+#### Build docker image
+```
+make image.build
+```
+
+*Note*:
+Build target creates docker image called `renderedtext/<svc_name>`
+with these tags:
+- `latest`
+- `<git_hash>-<SEMAPHORE_EXECUTABLE_UUID>`
+
+#### Execute service in the production container
+- `make image.run` will:
+    - build `renderedtext/<svc_name>` image and
+    - run container created from it.
+- `make image.test` will:
+    - build `renderedtext/<svc_name>` image
+    - generate `docker-compose.yml` from `docker-compose.yml.eex`
+    - run all containers defined in `docker-compose.yml`
+
+To test container send requests to port 4000 (e.g. `curl localhost:4000/`)
+
+#### Image upload/download
+To upload image to DockerHub repo use `make image.push`.
+
+To download image from DockerHub repo use `make image.pull`.
+
+### Deployment
 To create initial deploy
 ```
 make create-deploy
@@ -47,7 +83,7 @@ make create-deploy
 
 To redeploy:
 ```
-make redeploy
+make deploy
 ```
 
 This command deploys to `default` k8s cluster.
@@ -58,26 +94,6 @@ Note: By default k8s uses `dockerhub-secrets` secret to pull image from DockerHu
 To grant `rtrobot` permission to pull image
 you need to give `read` permissions on your new service image
 to DockerHub team `deployers`.
-
-### Local development
-
-#### Console
-Starts interactive docker image with mounted project directories
-```
-make console
-```
-
-#### File watcher
-To automaticaly recompile and run tests on each file change
-```
-make watch
-```
-
-### Docker image tags
-Build target creates docker image called `renderedtext/<svc_name>`
-with these tags:
-- `latest`
-- `<git_hash>-<SEMAPHORE_EXECUTABLE_UUID>`
 
 ## Micro-service k8s cluster entry-point
 After the micro-service initial deployment, it is not visible outside the
