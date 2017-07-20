@@ -4,7 +4,7 @@ Micro service skeleton can be created and deployed in 5 min.
 ## Install locally
 Most of the logic is 'mix task'.
 To make the task available in all directories for current user
-download the repo and type:
+clone the repo and type:
 
 ```
 MIX_ENV=prod mix do compile, archive.build, archive.install
