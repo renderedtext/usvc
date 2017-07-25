@@ -31,16 +31,16 @@ cd <svc_name>
 
 ### Local development
 All development is conducted in Docker container based on `renderedtext/elixir` image.
-The container is connected to the `host` network
+The container is connected to the `host` network.
 
 #### File watcher
-To automatically recompile and run tests on each file change
+To automatically recompile and run tests on each file change:
 ```
 make watch
 ```
 
 #### Console
-Starts interactive docker image with mounted project directories
+Starts interactive docker image with mounted project directories:
 ```
 make console
 ```
@@ -51,7 +51,8 @@ If you need PostgreSql database for local development:
 make postgres.run
 ```
 
-It will run Postgres in Docker container in background connected to the `host` network.
+It will run Postgres in Docker container in background, connected to the `host` network.
+The database will *not* persist data outside the container.
 To stop it:
 ```
 docker kill db
