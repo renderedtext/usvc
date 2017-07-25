@@ -16,7 +16,7 @@ INTERACTIVE_SESSION=\
           --user developer \
           --rm \
           --workdir="/home/developer/prj" \
-          -it renderedtext/elixir:latest
+          -it renderedtext/elixir:1.4
 
 
 console:
