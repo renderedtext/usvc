@@ -20,7 +20,7 @@ INTERACTIVE_SESSION=\
 
 
 console:
-	docker run -p 4000:4000 $(INTERACTIVE_SESSION)  /bin/bash
+	docker run --network=host $(INTERACTIVE_SESSION)  /bin/bash
 
 image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
@@ -47,7 +47,7 @@ k8s-shell:
 	kubectl exec -it $(pod_name) -- /bin/bash
 
 watch:
-	docker run $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
+	docker run --network=host $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
 
 lint:
 	docker run $(INTERACTIVE_SESSION)  mix do credo
