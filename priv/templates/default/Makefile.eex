@@ -52,6 +52,10 @@ watch:
 lint:
 	docker run $(INTERACTIVE_SESSION)  mix do credo
 
+postgres.run:
+	docker run -d --rm --name db --network=host postgres:9.6
+	@echo "\nConnect with: 'psql -h localhost -U postgres'"
+
 image.push: image.build
 	docker push $(IMAGE)
 	docker push $(IMAGE_LATEST)
