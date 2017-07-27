@@ -2,9 +2,9 @@
 
 PRJ_DIR=.ddev
 PRJ_FILE=${PRJ_DIR}/prj
+CONTAINER_HOME_DIR_COPY=${PRJ_DIR}/cache/dev
+CONTAINER_HOME_DIR=/home/dev
 DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.4.5-v2
-CONTAINER_HOME=/home/dev
-CONTAINER_PRJ_DIR=$CONTAINER_HOME/prj
 
 function not_ddev_dir {
   echo "This is not a ddev directory!"
@@ -55,7 +55,7 @@ function create_container {
     --name $1 \
     -it $DOCKER_IMAGE
   `
-  docker cp ./ $CID:$CONTAINER_PRJ_DIR/
+  push_data_to_container $1
 }
 
 function validate_prj_name {
@@ -75,6 +75,20 @@ function initialize_project {
   echo "Initialized project '$PRJ'"
 }
 
+function push_data_to_container {
+  CID=`container_id $1`
+
+  docker cp $CONTAINER_HOME_DIR_COPY $CID:$CONTAINER_HOME_DIR/..
+  docker start $1
+  docker exec --user root -it $1 chown -R dev:dev ../
+  docker kill $1
+}
+
+function pull_data_from_container {
+  CID=`container_id $1`
+  docker cp $CID:$CONTAINER_HOME_DIR $CONTAINER_HOME_DIR_COPY/..
+}
+
 
 CMD=$1
 shift
@@ -84,6 +98,7 @@ case $CMD in
     PRJ=`cat $PRJ_FILE`
     echo "Running container '$PRJ'"
     start_container $PRJ
+    pull_data_from_container $PRJ
   ;;
   "init")
     is_ddev_dir && echo "Already initialized" && exit 1
