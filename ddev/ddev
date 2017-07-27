@@ -25,8 +25,15 @@ function is_ddev_dir {
   [ -f $PRJ_FILE ]
 }
 
+function container_id {
+  docker ps -a --filter "name=$1" --format "{{.ID}} {{.Names}}" \
+  | grep "$1" \
+  | cut -d " " -f 1
+}
+
 function container_exists {
-  docker ps -a --filter "name=$1" --format "{{.Names}}" | grep "$1" > /dev/null
+  cid=$(container_id $1)
+  [ -n "$cid" ]
 }
 
 function start_container {
@@ -60,7 +67,7 @@ function initialize_project {
   PRJ=$1
   mkdir -p $PRJ_DIR
   echo "$PRJ" > $PRJ_FILE
-  echo "Initialized project ''$PRJ'"
+  echo "Initialized project '$PRJ'"
 }
 
 
