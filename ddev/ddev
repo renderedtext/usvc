@@ -2,6 +2,7 @@
 
 PRJ_DIR=.ddev
 PRJ_FILE=${PRJ_DIR}/prj
+DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.4.5-v2
 
 function not_ddev_dir {
   echo "This is not a ddev directory!"
@@ -42,7 +43,7 @@ function create_container {
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     --name $1 \
-    -it renderedtext/elixir-dev
+    -it $DOCKER_IMAGE
 }
 
 function validate_prj_name {
