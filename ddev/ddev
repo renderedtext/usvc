@@ -3,6 +3,8 @@
 PRJ_DIR=.ddev
 PRJ_FILE=${PRJ_DIR}/prj
 DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.4.5-v2
+CONTAINER_HOME=/home/dev
+CONTAINER_PRJ_DIR=$CONTAINER_HOME/prj
 
 function not_ddev_dir {
   echo "This is not a ddev directory!"
@@ -46,11 +48,14 @@ function start_container {
 
 function create_container {
   echo "Creating container '$1'"
-  docker create \
+  CID=` \
+    docker create \
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
     --name $1 \
     -it $DOCKER_IMAGE
+  `
+  docker cp ./ $CID:$CONTAINER_PRJ_DIR/
 }
 
 function validate_prj_name {
