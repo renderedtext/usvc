@@ -19,12 +19,12 @@ build: .elixir .dev .dev-gui
 	docker tag $(IMAGE_EX) $(IMAGE_EX_LATEST)
 	touch $@
 
-.dev: Dockerfile.dev
+.dev: Dockerfile.dev .elixir
 	docker build --cache-from $(IMAGE_DEV_LATEST) -t $(IMAGE_DEV) -f $< .
 	docker tag $(IMAGE_DEV) $(IMAGE_DEV_LATEST)
 	touch $@
 
-.dev-gui: Dockerfile.dev-gui
+.dev-gui: Dockerfile.dev-gui .dev
 	docker build --cache-from $(IMAGE_DEV_GUI_LATEST) -t $(IMAGE_DEV_GUI) -f $< .
 	docker tag $(IMAGE_DEV_GUI) $(IMAGE_DEV_GUI_LATEST)
 	touch $@

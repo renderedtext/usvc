@@ -11,6 +11,8 @@ RUN useradd -m dev && echo "dev:dev" | chpasswd
 ENV HOME /home/dev
 WORKDIR /home/dev/prj
 
+RUN chown -R dev:dev $HOME
+
+USER dev
 
 CMD /bin/bash
-
