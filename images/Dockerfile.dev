@@ -1,0 +1,18 @@
+FROM renderedtext/elixir:1.4.5-v2
+
+# ENV LANG=en_US.UTF-8
+
+USER root
+
+RUN apt-get update && \
+    apt-get install -y vim-tiny inotify-tools postgresql-client libxss1 libasound2 libxkbfile1 && \
+    wget https://github.com/atom/atom/releases/download/v1.18.0/atom-amd64.deb && \
+    dpkg -i atom-amd64.deb; true && \
+    apt-get -f -y install && \
+    rm -rf /var/lib/apt/lists/*
+#    apm install -y linter-elixirc
+
+
+
+CMD /bin/bash
+
