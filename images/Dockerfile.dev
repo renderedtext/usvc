@@ -1,4 +1,4 @@
-FROM renderedtext/elixir:1.4.5-v2
+FROM renderedtext/elixir:1.5.0-v2
 
 # ENV LANG=en_US.UTF-8
 
