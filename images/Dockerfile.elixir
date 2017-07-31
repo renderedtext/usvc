@@ -9,7 +9,7 @@ RUN apt-get update && \
 RUN useradd -m dev && echo "dev:dev" | chpasswd
 
 ENV HOME /home/dev
-WORKDIR /home/dev/prj
+WORKDIR $HOME
 
 RUN chown -R dev:dev $HOME
 
