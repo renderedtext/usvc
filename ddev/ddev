@@ -4,7 +4,7 @@ PRJ_DIR=.ddev
 PRJ_FILE=${PRJ_DIR}/prj
 CONTAINER_HOME_DIR_COPY=${PRJ_DIR}/cache/dev
 CONTAINER_HOME_DIR=/home/dev
-DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.4.5-v2
+DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.5.0-v2
 
 function not_ddev_dir {
   echo "This is not a ddev directory!"
@@ -86,6 +86,7 @@ function push_data_to_container {
 
 function pull_data_from_container {
   CID=`container_id $1`
+  mkdir -p $CONTAINER_HOME_DIR_COPY/..
   docker cp $CID:$CONTAINER_HOME_DIR $CONTAINER_HOME_DIR_COPY/..
 }
 
