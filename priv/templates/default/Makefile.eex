@@ -9,11 +9,13 @@ REPO=renderedtext/<%= prj %>
 IMAGE=$(REPO):$(TAG)
 IMAGE_LATEST=$(REPO):latest
 
+HOME_DIR=/home/dev
+WORKDIR=$HOME_DIR/<%= prj %>
 INTERACTIVE_SESSION=\
-          -v $$PWD/home_dir:/home/dev \
-          -v $$PWD:/home/dev/<%= prj %> \
+          -v $$PWD/home_dir:$HOME_DIR \
+          -v $$PWD:$WORKDIR \
           --rm \
-          --workdir="/home/developer/<%= prj %>" \
+          --workdir=$WORKDIR \
           -it renderedtext/elixir-dev:1.5.0-v2
 
 
