@@ -52,6 +52,7 @@ function create_container {
     docker create \
     -e DISPLAY=$DISPLAY \
     -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v /var/run/docker.sock:/var/run/docker.sock \
     --name $1 \
     -it $DOCKER_IMAGE
   `
