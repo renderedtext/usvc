@@ -5,7 +5,7 @@ FROM renderedtext/elixir:1.5.0-v2
 USER root
 
 RUN apt-get update && \
-    apt-get install -y vim-tiny inotify-tools postgresql-client sudo && \
+    apt-get install -y vim-tiny inotify-tools postgresql-client sudo tmux && \
     rm -rf /var/lib/apt/lists/*
 
 RUN adduser dev sudo
