@@ -10,13 +10,11 @@ IMAGE=$(REPO):$(TAG)
 IMAGE_LATEST=$(REPO):latest
 
 INTERACTIVE_SESSION=\
-          -v $$PWD/home_dir:/home/developer \
-          -v $$PWD:/home/developer/prj \
-          -e HOME=/home/developer/ \
-          --user developer \
+          -v $$PWD/home_dir:/home/dev \
+          -v $$PWD:/home/dev/<%= prj %> \
           --rm \
-          --workdir="/home/developer/prj" \
-          -it renderedtext/elixir:1.4.5
+          --workdir="/home/developer/<%= prj %>" \
+          -it renderedtext/elixir-dev:1.5.0-v2
 
 
 console:
