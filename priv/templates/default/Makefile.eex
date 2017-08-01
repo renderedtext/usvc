@@ -18,9 +18,10 @@ INTERACTIVE_SESSION=\
           --workdir=$(WORKDIR) \
           -it renderedtext/elixir-dev:1.5.0-v2
 
+CMD?=/bin/bash
 
 console:
-	docker run --network=host $(INTERACTIVE_SESSION)  /bin/bash
+	docker run --network=host $(INTERACTIVE_SESSION) $(CMD)
 
 image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
