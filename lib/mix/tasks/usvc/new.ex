@@ -68,13 +68,15 @@ defmodule Mix.Tasks.Usvc.New do
     Templates.render(template_paths, output_paths, template_variables)
   end
 
+  @version Mix.Project.config[:version]
   defp template_variables(prj) do
     [
       prj: prj |> dash2underscore(),
       prj_dash: prj |> underscore2dash(),
       prj_atom: prj |> eex_atom(),
       prj_module_name: Macro.camelize(prj),
-      image_tag_placeholder: "<%= image_tag %>"
+      image_tag_placeholder: "<%= image_tag %>",
+      version: @version,
     ]
   end
 

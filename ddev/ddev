@@ -1,0 +1,115 @@
+#!/bin/bash
+
+PRJ_DIR=.ddev
+PRJ_FILE=${PRJ_DIR}/prj
+CONTAINER_HOME_DIR_COPY=${PRJ_DIR}/cache/dev
+CONTAINER_HOME_DIR=/home/dev
+DOCKER_IMAGE=renderedtext/elixir-dev-gui:1.5.0-v2
+
+function not_ddev_dir {
+  echo "This is not a ddev directory!"
+  help
+}
+
+function help {
+  echo """
+Usage:
+ddev [cmd]
+
+Commands:
+   run            Run container [default]
+   init <name>    Create new project in the current dir
+"""
+exit 1
+}
+
+function is_ddev_dir {
+  [ -f $PRJ_FILE ]
+}
+
+function container_id {
+  docker ps -a --filter "name=$1" --format "{{.ID}} {{.Names}}" \
+  | grep "$1" \
+  | cut -d " " -f 1
+}
+
+function container_exists {
+  cid=$(container_id $1)
+  [ -n "$cid" ]
+}
+
+function start_container {
+  container_exists $1
+  if [ $? -ne 0 ] ; then
+    create_container $1
+  fi
+  docker start -i $1
+}
+
+function create_container {
+  echo "Creating container '$1'"
+  CID=` \
+    docker create \
+    -e DISPLAY=$DISPLAY \
+    -v /tmp/.X11-unix:/tmp/.X11-unix \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    --name $1 \
+    -it $DOCKER_IMAGE
+  `
+  push_data_to_container $1
+}
+
+function validate_prj_name {
+  if [ -z $1 ] ; then
+    echo "Project name is mandatory!"
+    help
+    false
+  else
+    true
+  fi
+}
+
+function initialize_project {
+  PRJ=$1
+  mkdir -p $PRJ_DIR
+  echo "$PRJ" > $PRJ_FILE
+  echo "Initialized project '$PRJ'"
+}
+
+function push_data_to_container {
+  CID=`container_id $1`
+
+  docker cp $CONTAINER_HOME_DIR_COPY $CID:$CONTAINER_HOME_DIR/..
+  docker start $1
+  docker exec --user root -it $1 chown -R dev:dev ../
+  docker kill $1
+}
+
+function pull_data_from_container {
+  CID=`container_id $1`
+  mkdir -p $CONTAINER_HOME_DIR_COPY/..
+  docker cp $CID:$CONTAINER_HOME_DIR $CONTAINER_HOME_DIR_COPY/..
+}
+
+
+CMD=$1
+shift
+case $CMD in
+  "" | "run")
+    is_ddev_dir || not_ddev_dir || exit 1
+    PRJ=`cat $PRJ_FILE`
+    echo "Running container '$PRJ'"
+    start_container $PRJ
+    pull_data_from_container $PRJ
+  ;;
+  "init")
+    is_ddev_dir && echo "Already initialized" && exit 1
+    PRJ=$1
+    validate_prj_name $PRJ
+    initialize_project $PRJ
+    ;;
+  *)
+    echo "Not a ddev command: '$CMD'"
+    help
+  ;;
+esac
