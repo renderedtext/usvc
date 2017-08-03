@@ -7,6 +7,7 @@ ENV MIX_ENV=prod
 COPY mix* ./
 COPY config/ config/
 
+USER root
 RUN mix do local.hex --force, local.rebar --force, deps.get, compile; \
     chown dev.dev -R ../
 
