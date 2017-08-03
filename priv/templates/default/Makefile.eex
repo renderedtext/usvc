@@ -54,7 +54,10 @@ watch:
 	docker run --network=host $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
 
 lint:
-	docker run $(INTERACTIVE_SESSION)  mix do local.hex --force, local.rebar --force, deps.get, credo
+	$(MAKE) console CMD="mix do credo"
+
+lint-root:
+	$(MAKE) console USER=root CMD="mix do local.hex --force, local.rebar --force, deps.get, credo"
 
 postgres.run:
 	docker run -d --rm --name db --network=host postgres:9.6
