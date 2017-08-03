@@ -14,11 +14,13 @@ IMAGE_LATEST=$(REPO):latest
 
 HOME_DIR=/home/dev
 WORKDIR=$(HOME_DIR)/<%= prj %>
+USER=dev
 INTERACTIVE_SESSION=\
           -v $$PWD/home_dir:$(HOME_DIR) \
           -v $$PWD:$(WORKDIR) \
           --rm \
           --workdir=$(WORKDIR) \
+          --user=$(USER) \
           -it renderedtext/elixir-dev:1.5.0-v2
 
 CMD?=/bin/bash
@@ -54,7 +56,7 @@ watch:
 	docker run --network=host $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
 
 lint:
-	docker run $(INTERACTIVE_SESSION)  mix do credo
+	docker run $(INTERACTIVE_SESSION)  mix do local.hex --force, local.rebar --force, deps.get, credo
 
 postgres.run:
 	docker run -d --rm --name db --network=host postgres:9.6
