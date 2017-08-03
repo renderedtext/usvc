@@ -31,8 +31,6 @@ console:
 image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
 	docker tag $(IMAGE) $(IMAGE_LATEST)
-	$(eval size=$(shell wc -c <mix.lock ))
-	if [ $(size) -lt 5 ]; then $(MAKE) copy-mix.lock image.build; fi
 
 image.run: image.build
 	docker run -p 4000:4000 -it $(IMAGE)
@@ -76,8 +74,3 @@ config-gen:
 abort-on-uncommited-changes:
 	git diff-index --quiet HEAD --
 
-copy-mix.lock:
-	$(eval cid=$(shell docker create $(IMAGE)))
-	echo $(cid)
-	docker cp $(cid):/home/developer/prj/mix.lock ./mix.lock
-	docker rm -v $(cid)
