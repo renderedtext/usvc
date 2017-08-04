@@ -8,11 +8,13 @@ defmodule <%= prj_module_name %>.Application do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    alias Plug.Adapters.Cowboy
+
     # Define workers and child supervisors to be supervised
     children = [
-      # Starts a worker by calling: Ppp.Worker.start_link(arg1, arg2, arg3)
-      # worker(Ppp.Worker, [arg1, arg2, arg3]),
-      Plug.Adapters.Cowboy.child_spec(:http, <%= prj_module_name %>.Router, [], [port: 4000]),
+      # Starts a worker by calling: <%= prj_module_name %>.Worker.start_link(arg1, arg2, arg3)
+      # worker(<%= prj_module_name %>.Worker, [arg1, arg2, arg3]),
+      Cowboy.child_spec(:http, <%= prj_module_name %>.Router, [], [port: 4000]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
