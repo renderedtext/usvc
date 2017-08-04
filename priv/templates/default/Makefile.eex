@@ -35,8 +35,12 @@ image.build:
 image.run: image.build
 	docker run -p 4000:4000 -it $(IMAGE)
 
-image.test: image.build config-gen
-	docker-compose up
+# Container litens on different port
+# (so that container and 'mix run' can run together)
+image.test: image.build
+	docker run --rm --name <%= prj %> -p 4004:4000 -d $(IMAGE)
+	# run some tests...
+	docker kill <%= prj %>
 
 create-deploy: abort-on-uncommited-changes image.push config-gen
 	kubectl create -f deploy.yml

@@ -4,7 +4,7 @@ defmodule Mix.Tasks.Usvc.CfgGen do
   alias Usvc.Templates
 
   @shortdoc "Generate configs dependent on git hash"
-  @templates ["docker-compose.yml.eex", "deploy.yml.eex"]
+  @templates ["deploy.yml.eex"]
   @git_hash_cmd "git log --format=format:'%h' -1"
 
   def run(args) do
