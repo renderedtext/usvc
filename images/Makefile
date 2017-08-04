@@ -1,7 +1,7 @@
 .PHONY: build push
 
 
-TAG=1.5.0-v2
+TAG=1.5.1-v2
 REPO_EX=renderedtext/elixir
 REPO_DEV=renderedtext/elixir-dev
 REPO_DEV_GUI=renderedtext/elixir-dev-gui
