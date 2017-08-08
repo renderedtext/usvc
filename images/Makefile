@@ -30,5 +30,9 @@ build: .elixir .dev .dev-gui
 	touch $@
 
 push: build
-	docker push $(IMAGE)
-	docker push $(IMAGE_LATEST)
+	docker push $(IMAGE_EX) 
+	docker push $(IMAGE_DEV) 
+	docker push $(IMAGE_DEV_GUI)
+	docker push $(IMAGE_EX_LATEST) 
+	docker push $(IMAGE_DEV_LATEST) 
+	docker push $(IMAGE_DEV_GUI_LATEST)
