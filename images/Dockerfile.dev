@@ -12,6 +12,6 @@ RUN adduser dev sudo
 
 USER dev
 
-RUN mix archive.install http://usvc.tools.renderedtext.com/usvc-1.12.1.ez --force
+RUN mix archive.install http://usvc.tools.renderedtext.com/usvc-1.12.2.ez --force
 
 CMD /bin/bash
