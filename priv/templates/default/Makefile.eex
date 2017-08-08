@@ -15,7 +15,9 @@ IMAGE_LATEST=$(REPO):latest
 HOME_DIR=/home/dev
 WORKDIR=$(HOME_DIR)/<%= prj %>
 USER=dev
+MIX_ENV=dev
 INTERACTIVE_SESSION=\
+          -e MIX_ENV=$(MIX_ENV) \
           -v $$PWD/home_dir:$(HOME_DIR) \
           -v $$PWD:$(WORKDIR) \
           --rm \
