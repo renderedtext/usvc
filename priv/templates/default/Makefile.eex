@@ -16,19 +16,22 @@ HOME_DIR=/home/dev
 WORKDIR=$(HOME_DIR)/<%= prj %>
 USER=dev
 MIX_ENV=dev
+
+CONTAINER_ENV_VARS= \
+	-e MIX_ENV=$(MIX_ENV) \
+
 INTERACTIVE_SESSION=\
-          -e MIX_ENV=$(MIX_ENV) \
-          -v $$PWD/home_dir:$(HOME_DIR) \
-          -v $$PWD:$(WORKDIR) \
-          --rm \
-          --workdir=$(WORKDIR) \
-          --user=$(USER) \
-          -it renderedtext/elixir-dev:1.5.1-v2
+  -v $$PWD/home_dir:$(HOME_DIR) \
+  -v $$PWD:$(WORKDIR) \
+  --rm \
+  --workdir=$(WORKDIR) \
+  --user=$(USER) \
+  -it renderedtext/elixir-dev:1.5.1-v2
 
 CMD?=/bin/bash
 
 console:
-	docker run --network=host $(INTERACTIVE_SESSION) $(CMD)
+	docker run --network=host $(CONTAINER_ENV_VARS) $(INTERACTIVE_SESSION) $(CMD)
 
 image.build:
 	docker build --cache-from $(IMAGE_LATEST) -t $(IMAGE) .
@@ -57,7 +60,8 @@ k8s-shell:
 	kubectl exec -it $(pod_name) -- /bin/bash
 
 watch:
-	docker run --network=host $(INTERACTIVE_SESSION)  mix do deps.get, test.watch
+	docker run --network=host $(CONTAINER_ENV_VARS) $(INTERACTIVE_SESSION) \
+         mix do deps.get, test.watch
 
 lint:
 	$(MAKE) console CMD="mix do credo"
@@ -85,4 +89,3 @@ config-gen:
 
 abort-on-uncommited-changes:
 	git diff-index --quiet HEAD --
-
