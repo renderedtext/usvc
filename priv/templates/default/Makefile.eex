@@ -3,7 +3,7 @@
 
 .PHONY: image.build image.run image.test image.push image.pull
 .PHONY: create-deploy deploy k8s-shell console watch lint
-.PHONY: config-gen abort-on-uncommited-changes copy-mix.lock
+.PHONY: config-gen abort-on-uncommited-changes copy-mix.lock db.init
 
 SEMAPHORE_EXECUTABLE_UUID?=""
 GIT_HASH=$(shell git log --format=format:'%h' -1)
@@ -71,7 +71,14 @@ lint-root:
 
 postgres.run:
 	docker run -d --rm --name db --network=host postgres:9.6
-	@echo "\nConnect with: 'psql -h localhost -U postgres'"
+	@echo "\nWaiting for DB to become operational"
+	sleep 5
+	$(MAKE) db.init
+
+db.init:
+	$(MAKE) console MIX_ENV=$(MIX_ENV) USER=$(USER) CMD="mix do ecto.create, ecto.migrate"
+	@echo "\nDatabase '$(DB_NAME)' created and migrated."
+	@echo "\nConnect with: 'psql -h localhost -U postgres $(DB_NAME)'"
 
 image.push: image.build
 	docker push $(IMAGE)
