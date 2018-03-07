@@ -47,10 +47,6 @@ image.test: image.build
 	# run some tests...
 	docker kill <%= prj %>
 
-create-deploy: abort-on-uncommited-changes image.push config-gen
-	kubectl create -f deploy.yml
-	kubectl get svc/<%= prj_dash %>
-
 deploy: abort-on-uncommited-changes image.push config-gen
 	kubectl apply -f deploy.yml
 	kubectl get svc/<%= prj_dash %>

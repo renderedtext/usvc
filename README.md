@@ -88,12 +88,7 @@ To upload image to DockerHub repo use `make image.push`.
 To download image from DockerHub repo use `make image.pull`.
 
 ### Deployment
-To create initial deploy
-```
-make create-deploy
-```
-
-To redeploy:
+To deploy
 ```
 make deploy
 ```
@@ -130,14 +125,17 @@ The configuration tells us that the micro-service is,
 within the cluster, accessible on IP *100.67.25.213* and port *4000*
 (disregard the second port number).
 
-To send request from within the cluster you need to create container
-in the cluster (or use existing one) to issue requests from.
-Simplest way is to ssh to some container within the cluster:
+To send request from within the cluster you need to "enter" existing container
+in the cluster (or create new one) to issue requests from.
+First list all pods in the namespace and jump into container in one of them:
 ```
-make k8s-shell
+kubectl get po
+....
+
+kubectl exec -it <pod-name> /bin/bash
 ```
 
-and issue requests from it:
+After that issue requests from within the container:
 ```
 ssh curl <cluster-ip>:<port>
 ```
