@@ -1,3 +1,6 @@
 .dev
 .dev-gui
 .elixir
+Dockerfile.dev
+Dockerfile.dev-gui
+Dockerfile.elixir
