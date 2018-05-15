@@ -1,7 +1,8 @@
 .PHONY: build push
 
 
-TAG=1.5.1-v2
+export TAG_BASE=1.2.6
+export TAG=$(TAG_BASE)-v2
 REPO_EX=renderedtext/elixir
 REPO_DEV=renderedtext/elixir-dev
 REPO_DEV_GUI=renderedtext/elixir-dev-gui
@@ -13,6 +14,16 @@ IMAGE_DEV_LATEST=$(REPO_DEV):latest
 IMAGE_DEV_GUI_LATEST=$(REPO_DEV_GUI):latest
 
 build: .elixir .dev .dev-gui
+
+
+Dockerfile.elixir: Dockerfile.elixir.template Makefile
+	envsubst '$${TAG_BASE}' < $< > $@
+
+Dockerfile.dev: Dockerfile.dev.template Makefile
+	envsubst '$${TAG}' < $< > $@
+
+Dockerfile.dev-gui: Dockerfile.dev-gui.template Makefile
+	envsubst '$${TAG}' < $< > $@
 
 .elixir: Dockerfile.elixir
 	docker build --cache-from $(IMAGE_EX_LATEST) -t $(IMAGE_EX) -f $< .
@@ -30,9 +41,9 @@ build: .elixir .dev .dev-gui
 	touch $@
 
 push: build
-	docker push $(IMAGE_EX) 
-	docker push $(IMAGE_DEV) 
+	docker push $(IMAGE_EX)
+	docker push $(IMAGE_DEV)
 	docker push $(IMAGE_DEV_GUI)
-	docker push $(IMAGE_EX_LATEST) 
-	docker push $(IMAGE_DEV_LATEST) 
+	docker push $(IMAGE_EX_LATEST)
+	docker push $(IMAGE_DEV_LATEST)
 	docker push $(IMAGE_DEV_GUI_LATEST)
