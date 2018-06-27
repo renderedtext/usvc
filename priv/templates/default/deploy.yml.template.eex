@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: <%= prj_dash %>
-        image: renderedtext/<%= prj %>:<%= image_tag_placeholder %>
+        image: ${REPO}:${TAG}
         ports:
         - containerPort: 4000
         livenessProbe:
@@ -38,5 +38,4 @@ spec:
           periodSeconds: 5
           timeoutSeconds: 3
           failureThreshold: 3
-      imagePullSecrets:
-      - name: dockerhub-secrets
+      ${IMAGE_PULL_SECRETS}

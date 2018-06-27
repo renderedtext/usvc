@@ -9,10 +9,13 @@ ELIXIR_DOCKER_IMAGE=renderedtext/elixir-dev:1.6.5-v2
 
 SEMAPHORE_EXECUTABLE_UUID?=""
 GIT_HASH=$(shell git log --format=format:'%h' -1)
-TAG?=$(GIT_HASH)-$(SEMAPHORE_EXECUTABLE_UUID)
-REPO=renderedtext/<%= prj %>
+export TAG?=$(GIT_HASH)-$(SEMAPHORE_EXECUTABLE_UUID)
+export REPO=renderedtext/<%= prj %>
 IMAGE=$(REPO):$(TAG)
 IMAGE_LATEST=$(REPO):latest
+DEPLOY_FILE=deploy.yml
+DEPLOY_FILE_TEMPLATE=$(DEPLOY_FILE).template
+export IMAGE_PULL_SECRETS=imagePullSecrets: [name: dockerhub-secrets]
 
 HOME_DIR=/home/dev
 WORKDIR=$(HOME_DIR)/<%= prj %>
@@ -90,7 +93,8 @@ usvc.install:
 	mix archive.install http://usvc.tools.renderedtext.com/usvc-<%= version %>.ez --force
 
 config-gen:
-	mix usvc.cfg_gen $(TAG)
+	envsubst '$${REPO} $${TAG} $${IMAGE_PULL_SECRETS}' < $(DEPLOY_FILE_TEMPLATE) > $(DEPLOY_FILE)
+	cat $(DEPLOY_FILE)
 
 abort-on-uncommited-changes:
 	git diff-index --quiet HEAD --
