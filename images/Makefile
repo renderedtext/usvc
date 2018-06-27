@@ -1,7 +1,7 @@
 .PHONY: build push
 
 
-export TAG_BASE=1.2.6
+export TAG_BASE=1.6.5
 export TAG=$(TAG_BASE)-v2
 REPO_EX=renderedtext/elixir
 REPO_DEV=renderedtext/elixir-dev
