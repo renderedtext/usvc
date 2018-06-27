@@ -32,7 +32,7 @@ INTERACTIVE_SESSION=\
 
 CMD?=/bin/bash
 
-console:
+console: make_fs_home_dir
 	docker run --network=host $(CONTAINER_ENV_VARS) $(INTERACTIVE_SESSION) $(CMD)
 
 image.build:
@@ -94,3 +94,6 @@ config-gen:
 
 abort-on-uncommited-changes:
 	git diff-index --quiet HEAD --
+
+make_fs_home_dir:
+	mkdir -p home_dir
