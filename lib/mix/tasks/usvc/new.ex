@@ -53,13 +53,20 @@ defmodule Mix.Tasks.Usvc.New do
   end
 
   def git_setup(prj) do
-    with  {_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git init"]),
-          ({_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git add ."])),
-          {_, 0} <- System.cmd("/bin/bash", ["-c", "cd #{prj}; git commit -m \"initial\""])
+    with  {_, 0} <- exec_git_cmd(prj, "init"),
+          {_, 0} <- exec_git_cmd(prj, "add ."),
+          {_, 0} <- exec_git_cmd(prj, "config user.email \"usvc@example.com\""),
+          {_, 0} <- exec_git_cmd(prj, "config user.name \"usvc daemon\""),
+          {_, 0} <- exec_git_cmd(prj, "commit -m \"initial\""),
+          {_, 0} <- exec_git_cmd(prj, "config --unset user.email"),
+          {_, 0} <- exec_git_cmd(prj, "config --unset user.name")
     do
       {:ok, ""}
     end
   end
+
+  defp exec_git_cmd(prj, cmd),
+    do: System.cmd("/bin/bash", ["-c", "cd #{prj}; git #{cmd}"])
 
   defp render_templates(prj, svc_type) do
     template_paths = Templates.template_files_for(svc_type)
