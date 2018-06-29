@@ -1,2 +1,4 @@
 ls -la
-iex -S mix
+MIX_ENV=test mix test
+MIX_ENV=prod iex -S mix
+mix deps.get
