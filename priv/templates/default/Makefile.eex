@@ -7,10 +7,14 @@
 
 ELIXIR_DOCKER_IMAGE=renderedtext/elixir-dev:1.6.5-v2
 
+APP_NAME=<%= prj %>
+APP_NAME_DASH=<%= prj_dash %>
+APP_VSN=`grep 'version:' mix.exs | cut -d '"' -f2`
+
 SEMAPHORE_EXECUTABLE_UUID?=""
 GIT_HASH=$(shell git log --format=format:'%h' -1)
 export TAG?=$(GIT_HASH)-$(SEMAPHORE_EXECUTABLE_UUID)
-export REPO=renderedtext/<%= prj %>
+export REPO=renderedtext/$(APP_NAME)
 IMAGE=$(REPO):$(TAG)
 IMAGE_LATEST=$(REPO):latest
 DEPLOY_FILE=deploy.yml
@@ -18,16 +22,16 @@ DEPLOY_FILE_TEMPLATE=$(DEPLOY_FILE).template
 export IMAGE_PULL_SECRETS=imagePullSecrets: [name: dockerhub-secrets]
 
 HOME_DIR=/home/dev
-WORKDIR=$(HOME_DIR)/<%= prj %>
+REPO_DIR=$(HOME_DIR)/repo
+WORKDIR=$(REPO_DIR)/$(APP_NAME)
 USER=dev
-MIX_ENV=dev
 
 CONTAINER_ENV_VARS= \
-	-e MIX_ENV=$(MIX_ENV) \
+	-e APP_ENV=$(APP_ENV) \
 
 INTERACTIVE_SESSION=\
   -v $$PWD/home_dir:$(HOME_DIR) \
-  -v $$PWD:$(WORKDIR) \
+  -v $$PWD/..:$(REPO_DIR) \
   --rm \
   --workdir=$(WORKDIR) \
   --user=$(USER) \
@@ -48,13 +52,13 @@ image.run: image.build
 # Container litens on different port
 # (so that container and 'mix run' can run together)
 image.test: image.build
-	docker run --rm --name <%= prj %> -p 4004:4000 -d $(IMAGE)
+	docker run --rm --name $(APP_NAME) -p 4004:4000 -d $(IMAGE)
 	# run some tests...
-	docker kill <%= prj %>
+	docker kill $(APP_NAME)
 
 deploy: abort-on-uncommited-changes image.push config-gen
 	kubectl apply -f deploy.yml
-	kubectl get svc/<%= prj_dash %>
+	kubectl get svc/$(APP_NAME_DASH)
 
 k8s-shell:
 	$(eval pod_name=$(shell kubectl get po -l app=cluster-portal -o jsonpath={.items[*].metadata.name}))
@@ -88,9 +92,6 @@ image.push: image.build
 image.pull:
 	docker pull $(IMAGE)
 	docker pull $(IMAGE_LATEST)
-
-usvc.install:
-	mix archive.install http://usvc.tools.renderedtext.com/usvc-<%= version %>.ez --force
 
 config-gen:
 	envsubst '$${REPO} $${TAG} $${IMAGE_PULL_SECRETS}' < $(DEPLOY_FILE_TEMPLATE) > $(DEPLOY_FILE)
