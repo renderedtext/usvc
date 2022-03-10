@@ -7,7 +7,7 @@ defmodule <%= prj_module_name %>.MixProject do
   def project do
     [app: <%= prj_atom %>,
      version: "0.1.0",
-     elixir: "~> 1.11",
+     elixir: "~> 1.13",
      start_permanent: Mix.env == :prod,
      deps: deps()]
   end

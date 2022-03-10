@@ -1,7 +1,7 @@
 .PHONY: build push
 
 
-export TAG_BASE=1.11.4
+export TAG_BASE=1.13.3
 export TAG=$(TAG_BASE)
 REPO_EX=renderedtext/elixir
 REPO_DEV=renderedtext/elixir-dev
@@ -40,7 +40,7 @@ Dockerfile.dev-gui: Dockerfile.dev-gui.template Makefile
 	docker tag $(IMAGE_DEV_GUI) $(IMAGE_DEV_GUI_LATEST)
 	touch $@
 
-push: build
+push: 
 	docker push $(IMAGE_EX)
 	docker push $(IMAGE_DEV)
 	docker push $(IMAGE_DEV_GUI)
