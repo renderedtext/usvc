@@ -22,3 +22,7 @@ erl_crash.dump
 /docker-compose.yml
 /deploy.yml
 /home_dir
+log
+*.json
+
+/rel/artifacts
